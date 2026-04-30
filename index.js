@@ -1,0 +1,28 @@
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+
+const attractionsRoutes = require('./routes/attractions');
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.use('/api/attractions', attractionsRoutes);
+
+// error handler
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ message: 'Internal Server Error' });
+});
+
+// start server เฉพาะ dev
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3333;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
